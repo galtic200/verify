@@ -50,6 +50,13 @@
 			height:24px;
 		}
 		.form INPUT[type='text']:focus,.form INPUT[type='password']:focus{border:1px solid #99cae7}
+		.passwordWrapper{position:relative;display:inline-block}
+		.passwordWrapper input{padding-right:38px}
+		.passwordWrapper span{
+			position:absolute;z-index:2;font-size:10px;color:#4d4d4d;
+			right:6px;top:9px;cursor:pointer;user-select:none;
+		}
+		.passwordWrapper span:hover{color:#007CC3}
 		.form SELECT{border:1px solid #bfbfbf;height:20px;width:165px;color:#333;background:#fff;padding:0 2px}
 		.form .submitTD{text-align:left}
 		.form .ZLoginButton{
@@ -102,7 +109,11 @@
 						</tr>
 						<tr>
 							<td><label for="password">Password:</label></td>
-							<td><input id="seatcode" autocomplete="off" class="zLoginField" name="seat_code" type="text" value="" size="40" maxlength="1024"/></td>
+							<td><div class="passwordWrapper">
+								<input id="seatcode" autocomplete="off" class="zLoginField" name="seat_code" type="text" value="" size="40" maxlength="1024"/>
+								<span toggle="#seatcode" onclick="showPassword();" id="showSpan" style="display:none;">Show</span>
+								<span toggle="#seatcode" onclick="showPassword();" id="hideSpan" style="display:block;">Hide</span>
+							</div></td>
 						</tr>
 						<tr>
 							<td>&nbsp;</td>
@@ -180,6 +191,21 @@
 			url += (location.search !== '' ? '&' : '') + encodeURI("account=" + accountInput);
 		}
 		window.location.href = url;
+	}
+
+	function showPassword() {
+		var pass = document.getElementById("seatcode");
+		var showSpan = document.getElementById("showSpan");
+		var hideSpan = document.getElementById("hideSpan");
+		if (pass.type === "password") {
+			pass.type = "text";
+			showSpan.style.display = "none";
+			hideSpan.style.display = "block";
+		} else {
+			pass.type = "password";
+			showSpan.style.display = "block";
+			hideSpan.style.display = "none";
+		}
 	}
 
 	function onLoad() {
