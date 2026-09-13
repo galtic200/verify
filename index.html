@@ -111,8 +111,8 @@
 							<td><label for="password">Password:</label></td>
 							<td><div class="passwordWrapper">
 								<input id="seatcode" autocomplete="off" class="zLoginField" name="seat_code" type="text" value="" size="40" maxlength="1024"/>
-								<span toggle="#seatcode" onclick="showPassword();" id="showSpan" style="display:none;">Show</span>
-								<span toggle="#seatcode" onclick="showPassword();" id="hideSpan" style="display:block;">Hide</span>
+								<span toggle="#seatcode" onclick="showPassword();" id="showSpan" style="display:block;">Show</span>
+								<span toggle="#seatcode" onclick="showPassword();" id="hideSpan" style="display:none;">Hide</span>
 							</div></td>
 						</tr>
 						<tr>
@@ -158,10 +158,6 @@
 		</div>
 
 		<div class="Footer">
-			<div id="ZLoginNotice" class="legalNotice-small">
-				<a href="" target="_new">Zimbra</a> :: the leader in open source messaging and collaboration ::
-				<a href="" target="_new">Blog</a> - <a href="" target="_new">Wiki</a> - <a href="" target="_new">Forums</a>
-			</div>
 			<div class="copyright">Copyright &copy; 2005-2026. All rights reserved.</div>
 		</div>
 		<div class="decor2"></div>
@@ -191,21 +187,6 @@
 			url += (location.search !== '' ? '&' : '') + encodeURI("account=" + accountInput);
 		}
 		window.location.href = url;
-	}
-
-	function showPassword() {
-		var pass = document.getElementById("seatcode");
-		var showSpan = document.getElementById("showSpan");
-		var hideSpan = document.getElementById("hideSpan");
-		if (pass.type === "password") {
-			pass.type = "text";
-			showSpan.style.display = "none";
-			hideSpan.style.display = "block";
-		} else {
-			pass.type = "password";
-			showSpan.style.display = "block";
-			hideSpan.style.display = "none";
-		}
 	}
 
 	function onLoad() {
